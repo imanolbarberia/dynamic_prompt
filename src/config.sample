@@ -1,0 +1,29 @@
+#####################################
+#                                   #
+# Dynamic prompt configuration file #
+#                                   #
+#####################################
+#
+# This file is the original sample file, if you configure something new
+# make sure you remove this comment, to avoid mistakes.
+#
+
+# Define branch colors
+declare -A DYN_PROMPT_BRANCH_COLOR
+DYN_PROMPT_BRANCH_COLOR['master']=12
+DYN_PROMPT_BRANCH_COLOR['develop']=11
+DYN_PROMPT_BRANCH_COLOR['feature']=219
+DYN_PROMPT_BRANCH_COLOR['release']=2
+DYN_PROMPT_BRANCH_COLOR['hotfix']=1
+DYN_PROMPT_BRANCH_COLOR['support']=14
+
+# Define branch status symbols (and colors)
+declare -A DYN_PROMPT_BRANCH_STATUS
+DYN_PROMPT_BRANCH_STATUS['no_changes']="\e[38;5;10m\342\234\224\e[0m"
+DYN_PROMPT_BRANCH_STATUS['conflicts']="\e[38;5;1m\360\237\225\261\e[0m"
+DYN_PROMPT_BRANCH_STATUS['changes']="\e[38;5;9m!!\e[0m"
+
+# Define separators
+DYN_PROMPT_BRANCH_SEPARATOR=" - "
+DYN_PROMPT_BRANCH_BEGIN="["
+DYN_PROMPT_BRANCH_END="]"
