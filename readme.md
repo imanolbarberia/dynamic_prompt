@@ -1,6 +1,6 @@
 # Dynamic Bash Prompt Script
 A dynamically changing prompt for Bash shell.
-Current version: `0.3`
+Current version: `0.4`
 
 ## Features
 * Support for **git** project folders

@@ -1,5 +1,5 @@
 # Dynamic prompt!
-# ver: 0.3
+# ver: 0.4
 # This script is to be included in the .bashrc file, so no bash header is applied
 # 
 
