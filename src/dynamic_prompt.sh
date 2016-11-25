@@ -2,9 +2,11 @@
 # ver: 0.3
 # This script is to be included in the .bashrc file, so no bash header is applied
 # 
-# A configuration file may be prepended in the .bashrc, containig all the needed
-# variable definitions
 
+# Check for configuration file to load user defined variables
+if [ -f "$HOME/.cfg_dynamic_prompt" ]; then
+    . $HOME/.cfg_dynamic_prompt
+fi
 
 # Command to enable dynamic prompt
 dyn_prompt_on() {
