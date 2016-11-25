@@ -34,6 +34,9 @@ dyn_prompt_set() {
 
         # Current branch
         branch_name=$(git branch --no-color| grep \* | cut -d" " -f2)
+        if [ -z "$branch_name" ]; then
+            branch_name="(no_branch_defined)"
+        fi
         branch_type=$(echo $branch_name | cut -d"/" -f1)
         branch_color=${DYN_PROMPT_BRANCH_COLOR[$branch_type]:-$DYN_PROMPT_BRANCH_DEFAULT_COLOR}
         branch="\e[38;5;${branch_color}m${branch_name}\e[0m"
