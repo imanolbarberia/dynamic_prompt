@@ -33,8 +33,9 @@ dyn_prompt_set() {
         base_prompt="$(echo $PS1_ORIG | sed -e 's/\\\$ *$//')${DYN_PROMPT_BRANCH_SEPARATOR}"
 
         # Current branch
-        branch_name=$(git branch --no-color| grep \* | cut -d" " -f2 | cut -d"/" -f1)
-        branch_color=${DYN_PROMPT_BRANCH_COLOR[$branch_name]:-$DYN_PROMPT_BRANCH_DEFAULT_COLOR}
+        branch_name=$(git branch --no-color| grep \* | cut -d" " -f2)
+        branch_type=$(echo $branch_name | cut -d"/" -f1)
+        branch_color=${DYN_PROMPT_BRANCH_COLOR[$branch_type]:-$DYN_PROMPT_BRANCH_DEFAULT_COLOR}
         branch="\e[38;5;${branch_color}m${branch_name}\e[0m"
 
         # Status symbol and color
