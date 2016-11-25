@@ -1,6 +1,10 @@
 # Dynamic prompt!
 # ver: 0.3
 # This script is to be included in the .bashrc file, so no bash header is applied
+# 
+# A configuration file may be prepended in the .bashrc, containig all the needed
+# variable definitions
+
 
 # Command to enable dynamic prompt
 dyn_prompt_on() {
