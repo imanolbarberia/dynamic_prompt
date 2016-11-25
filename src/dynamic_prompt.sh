@@ -1,79 +1,76 @@
 # Dynamic prompt!
-# ver: 0.2
+# ver: 0.3
 # This script is to be included in the .bashrc file, so no bash header is applied
-
-static_base_prompt="\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\w"
 
 # Command to enable dynamic prompt
 dyn_prompt_on() {
-    PROMPT_COMMAND="dyn_prompt_set"
+    if [ -z "$PROMPT_COMMAND" ]; then
+        PROMPT_COMMAND="dyn_prompt_set"
+        export PS1_ORIG=$PS1
+    fi
 }
 
 # Command to disable dynamic prompt
 dyn_prompt_off() {
-    export PS1="${static_base_prompt}\$ "
-    PROMPT_COMMAND=""
+    if [ -n "$PROMPT_COMMAND" ]; then
+        export PS1=$PS1_ORIG
+        PROMPT_COMMAND=""
+    fi
 }
 
 # Command to configure prompt dynamically
 dyn_prompt_set() {
-    
-    ISGITDIR=`git rev-parse --git-dir 2> /dev/null`
-    if [ "$ISGITDIR" = "" ]; then
-        export PS1="${static_base_prompt}\$ "
+
+    if [ -z "$(git rev-parse --git-dir 2> /dev/null)" ]; then
+        export PS1=$PS1_ORIG
     else
-        symbol_no_changes="\e[38;5;10m\342\234\224\e[0m"
-        symbol_conflicts="\e[38;5;1m\360\237\225\261\e[0m"
-        symbol_changes="\e[38;5;9m!!\e[0m"
-        #symbol_ballot="\342\234\230"
-        #symbol_warning="\342\232\240"
-        
-        dyn_base_prompt="${static_base_prompt} -"
-        
-        # Branch color upon name
-        current_branch=`git branch --no-color| grep \* | cut -d" " -f2`
-        current_pattern=`echo $current_branch | cut -d"/" -f1`
+        base_prompt="$(echo $PS1_ORIG | sed -e 's/\\\$ *$//')${DYN_PROMPT_BRANCH_SEPARATOR}"
 
-        # Define colors
-        color_empty=8
-        color_master=12
-        color_develop=11
-        color_feature=219
-        color_release=2
-        color_hotfix=1
-        color_support=14
-        color_unknown=8
-        if [ "$current_branch" = "" ]; then
-            current_branch="\e[38;5;${color_empty}m(empty)\e[0m"
-        elif [ "$current_branch" = "master" ]; then
-            current_branch="\e[38;5;${color_master}m${current_branch}\e[0m"
-        elif [ "$current_branch" = "develop" ]; then
-            current_branch="\e[38;5;${color_develop}m${current_branch}\e[0m"
-        elif [ "$current_pattern" = "feature" ]; then
-            current_branch="\e[38;5;${color_feature}m${current_branch}\e[0m"
-        elif [ "$current_pattern" = "release" ]; then
-            current_branch="\e[38;5;${color_release}m${current_branch}\e[0m"
-        elif [ "$current_pattern" = "hotfix" ]; then
-            current_branch="\e[38;5;${color_hotfix}m${current_branch}\e[0m"
-        elif [ "$current_pattern" = "support" ]; then
-            current_branch="\e[38;5;${color_support}m${current_branch}\e[0m"
-        else
-            current_branch="\e[38;5;${color_unknown}m${current_branch}\e[0m"
-        fi
+        # Current branch
+        branch_name=$(git branch --no-color| grep \* | cut -d" " -f2 | cut -d"/" -f1)
+        branch_color=${DYN_PROMPT_BRANCH_COLOR[$branch_name]:-$DYN_PROMPT_BRANCH_DEFAULT_COLOR}
+        branch="\e[38;5;${branch_color}m${branch_name}\e[0m"
 
-        # Branch status symbol and color
-        current_status=`git status -s`;
-        if [ "$current_status" = "" ]; then
-            export PS1="${dyn_base_prompt} \[${current_branch} ${symbol_no_changes}\]\$ "
-        else
-            current_status=`git status -s | grep UU`
-            if [ ! "$current_status" = "" ]; then
-                export PS1="${dyn_base_prompt} \[${current_branch} ${symbol_conflicts}\]\$ "
+        # Status symbol and color
+        status="no_changes"
+        if [ -n "$(git status -s)" ]; then
+            if [ -n "$(git status -s | grep UU)" ]; then
+                status="conflicts"
             else
-                export PS1="${dyn_base_prompt} \[${current_branch} ${symbol_changes}\]\$ "
-            fi  
-        fi 
+                status="changes"
+            fi
+        fi
+        export PS1="${base_prompt}${DYN_PROMPT_BRANCH_BEGIN}$branch ${DYN_PROMPT_BRANCH_STATUS[$status]}${DYN_PROMPT_BRANCH_END}\$ "
     fi
 }
 
-export PROMPT_COMMAND="dyn_prompt_set"
+# Set default values if there are no previous user definitions
+
+# Branch colors, mostly according to git flow
+if [ -z "${DYN_PROMPT_BRANCH_COLOR}" ]; then
+    declare -A DYN_PROMPT_BRANCH_COLOR
+    DYN_PROMPT_BRANCH_COLOR['master']=12
+    DYN_PROMPT_BRANCH_COLOR['develop']=11
+    DYN_PROMPT_BRANCH_COLOR['feature']=219
+    DYN_PROMPT_BRANCH_COLOR['release']=2
+    DYN_PROMPT_BRANCH_COLOR['hotfix']=1
+    DYN_PROMPT_BRANCH_COLOR['support']=14
+    #.todo DYN_PROMPT_BRANCH_COLOR['bugfix']=1
+fi
+
+# Color for branches not matching any predefined name
+DYN_PROMPT_BRANCH_DEFAULT_COLOR=${DYN_PROMPT_BRANCH_DEFAULT_COLOR:-13}
+
+if [ -z "${DYN_PROMPT_BRANCH_STATUS}" ]; then
+    declare -A DYN_PROMPT_BRANCH_STATUS
+    DYN_PROMPT_BRANCH_STATUS['no_changes']="\e[38;5;10m\342\234\224\e[0m"
+    DYN_PROMPT_BRANCH_STATUS['conflicts']="\e[38;5;1m\360\237\225\261\e[0m"
+    DYN_PROMPT_BRANCH_STATUS['changes']="\e[38;5;9m!!\e[0m"
+fi
+
+DYN_PROMPT_BRANCH_SEPARATOR=${DYN_PROMPT_BRANCH_SEPARATOR:-" - "}
+DYN_PROMPT_BRANCH_BEGIN=${DYN_PROMPT_BRANCH_BEGIN:-"["}
+DYN_PROMPT_BRANCH_END=${DYN_PROMPT_BRANCH_END:-"]"}
+
+# Dynamic prompt activation
+dyn_prompt_on
