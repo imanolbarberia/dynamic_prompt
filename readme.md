@@ -25,9 +25,11 @@ user1@computer:~/dynamic-bash-prompt$
 ```
 
 ## Configuration
-Some parameters can be configured before importing this script. If any variable
-is already defined when you import the script, the value will not be
-overwritten. See the script to learn how to redefine them.
+Some parameters can be configured before importing this script. When installing
+the script, a default configuration file `.cfg_dynamic_prompt` is created
+in the `$HOME` folder with a sample (default) configuration.
+
+Currently configurable variables:
 
   1. `DYN_PROMPT_BRANCH_COLOR` is an array or color numbers for branch names. By
      default, branch names are taken from git flow. Real, visual color might
@@ -58,6 +60,5 @@ taste. For example, you might prefer:
 
 ## Author
 
-  * Imanol Barberia (*imanol.barberia@gmail.com*)  Original author
-
-  * Francesc Rocher (*francesc.rocher@gmail.com*)  Added configurable values
+  * Imanol Barberia (*imanol.barberia@gmail.com*) -  Original author
+  * Francesc Rocher (*francesc.rocher@gmail.com*) -  Added configurable values

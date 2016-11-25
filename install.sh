@@ -4,6 +4,8 @@ BASHRC=$HOME/.bashrc
 PROMPTNAME=.dynamic_prompt
 PROMPTFILE=$HOME/$PROMPTNAME
 NEWFILE=src/dynamic_prompt.sh
+NEWCFGFILE=src/config.sample
+CFGFILE=$HOME/.cfg_dynamic_prompt
 
 # Check if the script is already deployed
 if [ -f $PROMPTFILE ]; then
@@ -27,7 +29,8 @@ if [ -f $PROMPTFILE ]; then
 else
     # Script not deployed, so go for it!
     echo "Installing script in $HOME... "
-    cat $NEWFILE >> $PROMPTFILE
+    cat $NEWFILE > $PROMPTFILE
+    cat $NEWCFGFILE > $CFGFILE
 
     LINE=`cat $BASHRC | grep "$PROMPTNAME"`
     if [ "$LINE" = "" ]; then
