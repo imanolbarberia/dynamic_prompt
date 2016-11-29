@@ -45,6 +45,12 @@ dyn_reload_config() {
     . $HOME/.dynamic_prompt
 }
 
+# Change prompt scheme
+dyn_change_scheme() {
+    echo "Changing prompt scheme to: '$1'"
+    DYN_PROMPT_SCHEME=$1
+}
+
 # Command to configure prompt dynamically
 dyn_prompt_set() {
     local base_prompt
