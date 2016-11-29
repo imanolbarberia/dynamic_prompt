@@ -26,6 +26,14 @@ dyn_prompt_off() {
 
 # Command to configure prompt dynamically
 dyn_prompt_set() {
+    local base_prompt
+    local branch
+    local branch_color
+    local branch_line
+    local branch_name
+    local branch_prompt
+    local branch_type
+    local status
 
     if [ -z "$(git rev-parse --git-dir 2> /dev/null)" ]; then
         export PS1=$PS1_ORIG
