@@ -4,9 +4,24 @@
 #
 
 # Check for configuration file to load user defined variables
+#if [ -f "$HOME/.cfg_dynamic_prompt" ]; then
+#    . $HOME/.cfg_dynamic_prompt
+#fi
+
+# Command to print a color string
+dyn_color() {
+    if [ "$1" = "reset" ]; then
+        echo -n "\[\e[0m\]"
+    else
+        echo -n "\[\e[38;5;${1}m\]"
+    fi
+}
+
+# Check for configuration file to load user defined variables
 if [ -f "$HOME/.cfg_dynamic_prompt" ]; then
     . $HOME/.cfg_dynamic_prompt
 fi
+
 
 # Command to enable dynamic prompt
 dyn_prompt_on() {
@@ -54,7 +69,7 @@ dyn_prompt_set() {
 
         branch_type=$(echo $branch_name | cut -d"/" -f1)
         branch_color=${DYN_PROMPT_BRANCH_COLOR[$branch_type]:-$DYN_PROMPT_BRANCH_DEFAULT_COLOR}
-        branch="\[\e[38;5;${branch_color}m\]${branch_name}\[\e[0m\]"
+        branch="$(dyn_color ${branch_color})${branch_name}$(dyn_color reset)"
 
         # Status symbol and color
         status="no_changes"
@@ -88,9 +103,9 @@ DYN_PROMPT_BRANCH_DEFAULT_COLOR=${DYN_PROMPT_BRANCH_DEFAULT_COLOR:-13}
 
 if [ -z "${DYN_PROMPT_BRANCH_STATUS}" ]; then
     declare -A DYN_PROMPT_BRANCH_STATUS
-    DYN_PROMPT_BRANCH_STATUS['no_changes']="\[\e[38;5;10m\]\342\234\224\[\e[0m\]"
-    DYN_PROMPT_BRANCH_STATUS['conflicts']="\[\e[38;5;1m\]\360\237\225\261\[\e[0m\]"
-    DYN_PROMPT_BRANCH_STATUS['changes']="\[\e[38;5;9m\]!!\[\e[0m\]"
+    DYN_PROMPT_BRANCH_STATUS['no_changes']="$(dyn_color 10)\342\234\224$(dyn_color reset)"
+    DYN_PROMPT_BRANCH_STATUS['conflicts']="$(dyn_color 1)\360\237\225\261$(dyn_color reset)"
+    DYN_PROMPT_BRANCH_STATUS['changes']="$(dyn_color 9)!!$(dyn_color reset)"
 fi
 
 DYN_PROMPT_BRANCH_SEPARATOR=${DYN_PROMPT_BRANCH_SEPARATOR:-" - "}
