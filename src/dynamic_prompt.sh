@@ -33,10 +33,17 @@ dyn_prompt_set() {
         base_prompt="$(echo $PS1_ORIG | sed -e 's/\\\$ *$//')${DYN_PROMPT_BRANCH_SEPARATOR}"
 
         # Current branch
-        branch_name=$(git branch --no-color| grep \* | cut -d" " -f2)
-        if [ -z "$branch_name" ]; then
+        branch_line=$(git --no-pager branch --no-color --list | grep \*)
+        if [ -z "$branch_line" ]; then
             branch_name="(no_branch_defined)"
+        else
+            if [ "${branch_line/HEAD detached/}" = "$branch_line" ]; then
+                branch_name=$(echo "$branch_line" | cut -d' ' -f 2)
+            else
+                branch_name="("$(echo "$branch_line" | cut -d' ' -f 5)
+            fi
         fi
+
         branch_type=$(echo $branch_name | cut -d"/" -f1)
         branch_color=${DYN_PROMPT_BRANCH_COLOR[$branch_type]:-$DYN_PROMPT_BRANCH_DEFAULT_COLOR}
         branch="\e[38;5;${branch_color}m${branch_name}\e[0m"
