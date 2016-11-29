@@ -54,7 +54,7 @@ dyn_prompt_set() {
 
         branch_type=$(echo $branch_name | cut -d"/" -f1)
         branch_color=${DYN_PROMPT_BRANCH_COLOR[$branch_type]:-$DYN_PROMPT_BRANCH_DEFAULT_COLOR}
-        branch="\e[38;5;${branch_color}m${branch_name}\e[0m"
+        branch="\[\e[38;5;${branch_color}m\]${branch_name}\[\e[0m\]"
 
         # Status symbol and color
         status="no_changes"
@@ -88,9 +88,9 @@ DYN_PROMPT_BRANCH_DEFAULT_COLOR=${DYN_PROMPT_BRANCH_DEFAULT_COLOR:-13}
 
 if [ -z "${DYN_PROMPT_BRANCH_STATUS}" ]; then
     declare -A DYN_PROMPT_BRANCH_STATUS
-    DYN_PROMPT_BRANCH_STATUS['no_changes']="\e[38;5;10m\342\234\224\e[0m"
-    DYN_PROMPT_BRANCH_STATUS['conflicts']="\e[38;5;1m\360\237\225\261\e[0m"
-    DYN_PROMPT_BRANCH_STATUS['changes']="\e[38;5;9m!!\e[0m"
+    DYN_PROMPT_BRANCH_STATUS['no_changes']="\[\e[38;5;10m\]\342\234\224\[\e[0m\]"
+    DYN_PROMPT_BRANCH_STATUS['conflicts']="\[\e[38;5;1m\]\360\237\225\261\[\e[0m\]"
+    DYN_PROMPT_BRANCH_STATUS['changes']="\[\e[38;5;9m\]!!\[\e[0m\]"
 fi
 
 DYN_PROMPT_BRANCH_SEPARATOR=${DYN_PROMPT_BRANCH_SEPARATOR:-" - "}
