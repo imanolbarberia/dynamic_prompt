@@ -1,7 +1,7 @@
 # Dynamic prompt!
 # ver: 0.4
 # This script is to be included in the .bashrc file, so no bash header is applied
-# 
+#
 
 # Check for configuration file to load user defined variables
 if [ -f "$HOME/.cfg_dynamic_prompt" ]; then
