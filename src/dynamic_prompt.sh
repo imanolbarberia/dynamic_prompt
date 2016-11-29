@@ -39,6 +39,12 @@ dyn_prompt_off() {
     fi
 }
 
+# Command to reload configuration
+dyn_reload_config() {
+    echo "Reloading configuration..."
+    . $HOME/.dynamic_prompt
+}
+
 # Command to configure prompt dynamically
 dyn_prompt_set() {
     local base_prompt
