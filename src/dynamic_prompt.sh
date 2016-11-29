@@ -49,6 +49,8 @@ dyn_prompt_set() {
     local branch_prompt
     local branch_type
     local status
+    local git_top_level
+    local git_prefix
 
     if [ -z "$(git rev-parse --git-dir 2> /dev/null)" ]; then
         export PS1=$PS1_ORIG
@@ -80,7 +82,22 @@ dyn_prompt_set() {
                 status="changes"
             fi
         fi
-        export PS1="${base_prompt}${DYN_PROMPT_BRANCH_BEGIN}$branch ${DYN_PROMPT_BRANCH_STATUS[$status]}${DYN_PROMPT_BRANCH_END}\$ "
+        
+        # Display the proper prompt scheme
+        if [ "$DYN_PROMPT_SCHEME" = "1" ]; then
+            local separator_line
+            for F in `seq $(tput cols)`; do
+                separator_line=${separator_line}${DYN_SEPARATOR_CHAR}
+            done
+            export PS1="$separator_line\n"
+            export PS1="${PS1}$(dyn_color 8)Top level path: $(dyn_color 15)$(git rev-parse --show-toplevel)$(dyn_color reset)\n"
+            export PS1="${PS1}$(dyn_color 8)  Working path: $(dyn_color 2)/$(git rev-parse --show-prefix)$(dyn_color reset)\n"
+            export PS1="${PS1}$(dyn_color 8)[$(dyn_color 10)\u$(dyn_color 8)@$(dyn_color 12)\h$(dyn_color 8)]$(dyn_color reset)"
+            export PS1="${PS1}${DYN_PROMPT_BRANCH_SEPARATOR}"
+            export PS1="${PS1}${DYN_PROMPT_BRANCH_BEGIN}$branch ${DYN_PROMPT_BRANCH_STATUS[$status]}${DYN_PROMPT_BRANCH_END}\$ "
+        else
+            export PS1="${base_prompt}${DYN_PROMPT_BRANCH_BEGIN}$branch ${DYN_PROMPT_BRANCH_STATUS[$status]}${DYN_PROMPT_BRANCH_END}\$ "
+        fi
     fi
 }
 
@@ -111,6 +128,9 @@ fi
 DYN_PROMPT_BRANCH_SEPARATOR=${DYN_PROMPT_BRANCH_SEPARATOR:-" - "}
 DYN_PROMPT_BRANCH_BEGIN=${DYN_PROMPT_BRANCH_BEGIN:-"["}
 DYN_PROMPT_BRANCH_END=${DYN_PROMPT_BRANCH_END:-"]"}
+
+DYN_SEPARATOR_CHAR=${DYN_SEPARATOR_CHAR:-"\[\342\224\201\]"}
+DYN_PROMPT_SCHEME=${DYN_PROMPT_SCHEME:-1}
 
 # Dynamic prompt activation
 dyn_prompt_on
