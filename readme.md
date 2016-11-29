@@ -1,11 +1,13 @@
 # Dynamic Bash Prompt Script
 A dynamically changing prompt for Bash shell.
-Current version: `0.4`
+Current version: `0.5`
 
 ## Features
 * Support for **git** project folders
   * Shows the current branch name
   * Shows a colored symbol representing the status of the branch (no changes, modified, conflicted)
+* Configuration file for customizing prompt output
+* Configurable prompt schemes (default and scheme #1)
 
 ## How to install
 Just run the `install.sh` file that can be found in the root folder.
@@ -44,9 +46,15 @@ Currently configurable variables:
   4. `DYN_PROMPT_BRANCH_SEPARATOR` is a string used as a separator between your
      prompt and the branch indicator.
 
-  5. `DYN_PROMPT_BRANCH_BEGIN` and `DYN_PROMPT_BRANCH_BEGIN` are two characters
+  5. `DYN_PROMPT_BRANCH_BEGIN` and `DYN_PROMPT_BRANCH_END` are two characters
      used to wrap the branch+status indicator, usually `[` and `]`, `(` and `)`
      ...
+
+  6. `DYN_PROMPT_SCHEME` is number that determines the prompt scheme to use.
+     For the moment only 2 schemes are available: default and #1.
+
+  7. `DYN_SEPARATOR_CHAR` is the character (and color) used to separate the 
+     prompt from the previous output in some of the prompt schemes.
 
 Probably you will need some experimentation with these variables to suite your
 taste. For example, you might prefer:
@@ -56,7 +64,6 @@ taste. For example, you might prefer:
     DYN_PROMPT_BRANCH_BEGIN=" "
     DYN_PROMPT_BRANCH_END=" "
 ~~~
-
 
 ## Author
 
