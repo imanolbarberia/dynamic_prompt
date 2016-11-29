@@ -1,7 +1,7 @@
 # Dynamic prompt!
 # ver: 0.4
 # This script is to be included in the .bashrc file, so no bash header is applied
-# 
+#
 
 # Check for configuration file to load user defined variables
 if [ -f "$HOME/.cfg_dynamic_prompt" ]; then
@@ -26,6 +26,14 @@ dyn_prompt_off() {
 
 # Command to configure prompt dynamically
 dyn_prompt_set() {
+    local base_prompt
+    local branch
+    local branch_color
+    local branch_line
+    local branch_name
+    local branch_prompt
+    local branch_type
+    local status
 
     if [ -z "$(git rev-parse --git-dir 2> /dev/null)" ]; then
         export PS1=$PS1_ORIG
@@ -33,13 +41,20 @@ dyn_prompt_set() {
         base_prompt="$(echo $PS1_ORIG | sed -e 's/\\\$ *$//')${DYN_PROMPT_BRANCH_SEPARATOR}"
 
         # Current branch
-        branch_name=$(git branch --no-color| grep \* | cut -d" " -f2)
-        if [ -z "$branch_name" ]; then
+        branch_line=$(git --no-pager branch --no-color --list | grep \*)
+        if [ -z "$branch_line" ]; then
             branch_name="(no_branch_defined)"
+        else
+            if [ "${branch_line/HEAD detached/}" = "$branch_line" ]; then
+                branch_name=$(echo "$branch_line" | cut -d' ' -f 2)
+            else
+                branch_name="("$(echo "$branch_line" | cut -d' ' -f 5)
+            fi
         fi
+
         branch_type=$(echo $branch_name | cut -d"/" -f1)
         branch_color=${DYN_PROMPT_BRANCH_COLOR[$branch_type]:-$DYN_PROMPT_BRANCH_DEFAULT_COLOR}
-        branch="\e[38;5;${branch_color}m${branch_name}\e[0m"
+        branch="\[\e[38;5;${branch_color}m\]${branch_name}\[\e[0m\]"
 
         # Status symbol and color
         status="no_changes"
@@ -73,9 +88,9 @@ DYN_PROMPT_BRANCH_DEFAULT_COLOR=${DYN_PROMPT_BRANCH_DEFAULT_COLOR:-13}
 
 if [ -z "${DYN_PROMPT_BRANCH_STATUS}" ]; then
     declare -A DYN_PROMPT_BRANCH_STATUS
-    DYN_PROMPT_BRANCH_STATUS['no_changes']="\e[38;5;10m\342\234\224\e[0m"
-    DYN_PROMPT_BRANCH_STATUS['conflicts']="\e[38;5;1m\360\237\225\261\e[0m"
-    DYN_PROMPT_BRANCH_STATUS['changes']="\e[38;5;9m!!\e[0m"
+    DYN_PROMPT_BRANCH_STATUS['no_changes']="\[\e[38;5;10m\]\342\234\224\[\e[0m\]"
+    DYN_PROMPT_BRANCH_STATUS['conflicts']="\[\e[38;5;1m\]\360\237\225\261\[\e[0m\]"
+    DYN_PROMPT_BRANCH_STATUS['changes']="\[\e[38;5;9m\]!!\[\e[0m\]"
 fi
 
 DYN_PROMPT_BRANCH_SEPARATOR=${DYN_PROMPT_BRANCH_SEPARATOR:-" - "}
