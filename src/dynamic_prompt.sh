@@ -103,8 +103,8 @@ DYN_PROMPT_BRANCH_DEFAULT_COLOR=${DYN_PROMPT_BRANCH_DEFAULT_COLOR:-13}
 
 if [ -z "${DYN_PROMPT_BRANCH_STATUS}" ]; then
     declare -A DYN_PROMPT_BRANCH_STATUS
-    DYN_PROMPT_BRANCH_STATUS['no_changes']="$(dyn_color 10)\342\234\224$(dyn_color reset)"
-    DYN_PROMPT_BRANCH_STATUS['conflicts']="$(dyn_color 1)\360\237\225\261$(dyn_color reset)"
+    DYN_PROMPT_BRANCH_STATUS['no_changes']="$(dyn_color 10)\[\342\234\224\]$(dyn_color reset)"
+    DYN_PROMPT_BRANCH_STATUS['conflicts']="$(dyn_color 1)\[\360\237\225\261\]$(dyn_color reset)"
     DYN_PROMPT_BRANCH_STATUS['changes']="$(dyn_color 9)!!$(dyn_color reset)"
 fi
 
