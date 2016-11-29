@@ -31,7 +31,7 @@ Some parameters can be configured before importing this script. When installing
 the script, a default configuration file `.cfg_dynamic_prompt` is created
 in the `$HOME` folder with a sample (default) configuration.
 
-Currently configurable variables:
+### Configurable variables
 
   1. `DYN_PROMPT_BRANCH_COLOR` is an array or color numbers for branch names. By
      default, branch names are taken from git flow. Real, visual color might
@@ -64,6 +64,15 @@ taste. For example, you might prefer:
     DYN_PROMPT_BRANCH_BEGIN=" "
     DYN_PROMPT_BRANCH_END=" "
 ~~~
+
+### Prompt schemes
+For the moment there are only 2 available schemes: default and #1.
+
+#### Default scheme
+![Default scheme](/doc/scheme_default.png)
+
+#### Scheme #1
+![Scheme #1](/doc/scheme_1.png)
 
 ## Author
 
