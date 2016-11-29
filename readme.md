@@ -26,6 +26,12 @@ Modifying .bashrc...
 user1@computer:~/dynamic-bash-prompt$
 ```
 
+## Available commands
+  * `dyn_prompt_off`   : Disables the dynamic prompt
+  * `dyn_prompt_on`    : Enables the dynamic prompt
+  * `dyn_reload_config`: Reloads the script with the configuration file
+  * `dyn_change_scheme`: Selects the specified scheme
+
 ## Configuration
 Some parameters can be configured before importing this script. When installing
 the script, a default configuration file `.cfg_dynamic_prompt` is created
