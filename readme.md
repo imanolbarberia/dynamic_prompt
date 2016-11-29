@@ -80,7 +80,6 @@ For the moment there are only 2 available schemes: default and #1.
 #### Scheme #1
 ![Scheme #1](/doc/scheme_1.png)
 
-## Author
-
+## Authors
   * Imanol Barberia (*imanol.barberia@gmail.com*) -  Original author
   * Francesc Rocher (*francesc.rocher@gmail.com*) -  Added configurable values
