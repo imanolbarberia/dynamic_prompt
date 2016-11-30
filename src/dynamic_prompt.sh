@@ -69,19 +69,23 @@ dyn_prompt_set() {
     else
         base_prompt="$(echo $PS1_ORIG | sed -e 's/\\\$ *$//')${DYN_PROMPT_BRANCH_SEPARATOR}"
 
-        # Current branch
-        branch_line=$(git --no-pager branch --no-color --list | grep \*)
+        # Current branch (we substitute * for k, because it was being expanded when echoing)
+        branch_line=$(git --no-pager branch --no-color --list | grep "*" | sed -e 's/(//' | sed -e 's/)//' | sed -e 's/\*/k/' )
         if [ -z "$branch_line" ]; then
             branch_name="(no_branch_defined)"
         else
-            if [ "${branch_line/HEAD detached/}" = "$branch_line" ]; then
-                branch_name=$(echo "$branch_line" | cut -d' ' -f 2)
+            if [ "$(echo $branch_line | cut -d' ' -f3)" = "from" ]; then
+                branch_name="~"$(echo $branch_line | cut -d' ' -f4)"~"
+                branch_type="detached"
             else
-                branch_name="("$(echo "$branch_line" | cut -d' ' -f 5)
+                branch_name=$(echo $branch_line | cut -d' ' -f2)
             fi
         fi
 
-        branch_type=$(echo $branch_name | cut -d"/" -f1)
+        # If branch type was not set (only way is that it is a detached branch) set the type
+        if [ "$branch_type" = "" ]; then
+            branch_type=$(echo $branch_name | cut -d"/" -f1)
+        fi
         branch_color=${DYN_PROMPT_BRANCH_COLOR[$branch_type]:-$DYN_PROMPT_BRANCH_DEFAULT_COLOR}
         branch="$(dyn_color ${branch_color})${branch_name}$(dyn_color reset)"
 
@@ -124,6 +128,7 @@ if [ -z "${DYN_PROMPT_BRANCH_COLOR}" ]; then
     DYN_PROMPT_BRANCH_COLOR['release']=2
     DYN_PROMPT_BRANCH_COLOR['hotfix']=1
     DYN_PROMPT_BRANCH_COLOR['support']=14
+    DYN_PROMPT_BRANCH_COLOR['detached']=13
     #.todo DYN_PROMPT_BRANCH_COLOR['bugfix']=1
 fi
 
