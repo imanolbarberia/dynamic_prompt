@@ -63,6 +63,11 @@ dyn_prompt_set() {
     local status
     local git_top_level
     local git_prefix
+    local branch_trailing
+    local commits_check
+    local commits_position
+    local commits_number
+    local commits_trailing
 
     if [ -z "$(git rev-parse --git-dir 2> /dev/null)" ]; then
         export PS1=$PS1_ORIG
@@ -99,6 +104,24 @@ dyn_prompt_set() {
             fi
         fi
         
+        # Commits ahead/behind
+        commits_check=$(git branch -v | grep "*" | sed -e "s/\[//" | sed -e "s/\]//" | sed -e 's/\*/k/' )
+        echo "[DEBUG]: Check: '$commits_check'"
+        commits_position=$(echo $commits_check|cut -d' ' -f4)
+        echo "[DEBUG]: Pos: '$commits_position'"
+        commits_number=$(echo $commits_check|cut -d' ' -f5)
+        echo "[DEBUG]: Num: '$commits_number'"
+        
+        if [ "$commits_position" = "ahead" ]; then
+            commits_trailing="${DYN_COMMITS_SEPARATOR}$(dyn_color 2)${commits_number}+$(dyn_color reset)"
+        elif [ "$commits_position" = "behind" ]; then
+            commits_trailing="${DYN_COMMITS_SEPARATOR}$(dyn_color 1)${commits_number}-$(dyn_color reset)"
+        else
+            commits_trailing=""
+        fi
+        
+        branch_trailing="${DYN_PROMPT_BRANCH_BEGIN}$branch ${DYN_PROMPT_BRANCH_STATUS[$status]}${commits_trailing}${DYN_PROMPT_BRANCH_END}"
+        
         # Display the proper prompt scheme
         if [ "$DYN_PROMPT_SCHEME" = "1" ]; then
             local separator_line
@@ -110,9 +133,9 @@ dyn_prompt_set() {
             export PS1="${PS1}$(dyn_color 8)  Working path: $(dyn_color 2)/$(git rev-parse --show-prefix)$(dyn_color reset)\n"
             export PS1="${PS1}$(dyn_color 8)[$(dyn_color 10)\u$(dyn_color 8)@$(dyn_color 12)\h$(dyn_color 8)]$(dyn_color reset)"
             export PS1="${PS1}${DYN_PROMPT_BRANCH_SEPARATOR}"
-            export PS1="${PS1}${DYN_PROMPT_BRANCH_BEGIN}$branch ${DYN_PROMPT_BRANCH_STATUS[$status]}${DYN_PROMPT_BRANCH_END}\$ "
+            export PS1="${PS1}${branch_trailing}\$ "
         else
-            export PS1="${base_prompt}${DYN_PROMPT_BRANCH_BEGIN}$branch ${DYN_PROMPT_BRANCH_STATUS[$status]}${DYN_PROMPT_BRANCH_END}\$ "
+            export PS1="${base_prompt}${branch_trailing}\$ "
         fi
     fi
 }
@@ -148,6 +171,8 @@ DYN_PROMPT_BRANCH_END=${DYN_PROMPT_BRANCH_END:-"]"}
 
 DYN_SEPARATOR_CHAR=${DYN_SEPARATOR_CHAR:-"\[\342\224\201\]"}
 DYN_PROMPT_SCHEME=${DYN_PROMPT_SCHEME:-1}
+
+DYN_COMMITS_SEPARATOR=${DYN_COMMITS_SEPARATOR:-"|"}
 
 # Dynamic prompt activation
 dyn_prompt_on
