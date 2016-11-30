@@ -106,11 +106,8 @@ dyn_prompt_set() {
         
         # Commits ahead/behind
         commits_check=$(git branch -v | grep "*" | sed -e "s/\[//" | sed -e "s/\]//" | sed -e 's/\*/k/' )
-        echo "[DEBUG]: Check: '$commits_check'"
         commits_position=$(echo $commits_check|cut -d' ' -f4)
-        echo "[DEBUG]: Pos: '$commits_position'"
         commits_number=$(echo $commits_check|cut -d' ' -f5)
-        echo "[DEBUG]: Num: '$commits_number'"
         
         if [ "$commits_position" = "ahead" ]; then
             commits_trailing="${DYN_COMMITS_SEPARATOR}$(dyn_color 2)${commits_number}+$(dyn_color reset)"
