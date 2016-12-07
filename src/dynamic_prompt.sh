@@ -99,7 +99,7 @@ dyn_prompt_set() {
                 status="changes"
             fi
         fi
-        
+
         # Display the proper prompt scheme
         if [ "$DYN_PROMPT_SCHEME" = "1" ]; then
             local separator_line
