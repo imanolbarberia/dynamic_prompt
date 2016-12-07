@@ -70,11 +70,12 @@ dyn_prompt_set() {
         base_prompt="$(echo $PS1_ORIG | sed -e 's/\\\$ *$//')${DYN_PROMPT_BRANCH_SEPARATOR}"
 
         # Current branch (we substitute * for k, because it was being expanded when echoing)
-        branch_line=$(git --no-pager branch --no-color --list | grep "*" | sed -e 's/(//' | sed -e 's/)//' | sed -e 's/\*/k/' )
+        branch_line=$(git --no-pager branch --no-color --list | grep "*" | sed -e 's/(//' -e 's/)//' -e 's/\*//' )
         if [ -z "$branch_line" ]; then
             branch_name="(no_branch_defined)"
         else
-            if [ "$(echo $branch_line | cut -d' ' -f3)" = "from" ]; then
+            #if [ "$(echo $branch_line | cut -d' ' -f3)" = "from" ]; then
+            if [ "$(echo $branch_line | cut -d' ' -f2)" = "detached" ]; then
                 branch_name="~"$(echo $branch_line | cut -d' ' -f4)"~"
                 branch_type="detached"
             else
@@ -98,7 +99,7 @@ dyn_prompt_set() {
                 status="changes"
             fi
         fi
-        
+
         # Display the proper prompt scheme
         if [ "$DYN_PROMPT_SCHEME" = "1" ]; then
             local separator_line
