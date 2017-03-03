@@ -16,6 +16,7 @@ DYN_PROMPT_BRANCH_COLOR['feature']=219
 DYN_PROMPT_BRANCH_COLOR['release']=2
 DYN_PROMPT_BRANCH_COLOR['hotfix']=1
 DYN_PROMPT_BRANCH_COLOR['support']=14
+DYN_PROMPT_BRANCH_COLOR['detached']=13
 
 # Define branch status symbols (and colors)
 declare -A DYN_PROMPT_BRANCH_STATUS
@@ -33,3 +34,6 @@ DYN_PROMPT_SCHEME=0
 
 # Prompt separator char
 DYN_SEPARATOR_CHAR="$(dyn_color 8)\[\342\224\200\]$(dyn_color reset)"
+
+# Separator between branch and commits
+DYN_COMMITS_SEPARATOR="|"

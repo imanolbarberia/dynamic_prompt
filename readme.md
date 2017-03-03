@@ -1,6 +1,6 @@
 # Dynamic Bash Prompt Script
 A dynamically changing prompt for Bash shell.
-Current version: `0.5`
+Current version: `0.6`
 
 ## Features
 * Support for **git** project folders
@@ -75,10 +75,10 @@ taste. For example, you might prefer:
 For the moment there are only 2 available schemes: default and #1.
 
 #### Default scheme
-![Default scheme](/doc/scheme_default.png)
+![Default scheme](doc/scheme_default.png)
 
 #### Scheme #1
-![Scheme #1](/doc/scheme_1.png)
+![Scheme #1](doc/scheme_1.png)
 
 ## Authors
   * Imanol Barberia (*imanol.barberia@gmail.com*) -  Original author
